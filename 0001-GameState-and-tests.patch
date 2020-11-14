@@ -1,0 +1,175 @@
+From 5318177dc7a2b2050fa4172695214e46449cdd45 Mon Sep 17 00:00:00 2001
+From: mario31274 <mario31274@yahoo.com.tw>
+Date: Thu, 12 Nov 2020 00:30:22 -0500
+Subject: [PATCH 1/2] GameState and tests
+
+---
+ .gitignore                        |  2 ++
+ OthelloAI/src/GameState.py        | 58 +++++++++++++++++++++++++++++++
+ OthelloAI/src/__init__.py         |  0
+ OthelloAI/src/ui/MainFrame.py     | 10 ++++++
+ OthelloAI/tests/__init__.py       |  0
+ OthelloAI/tests/test_GameState.py | 48 +++++++++++++++++++++++++
+ 6 files changed, 118 insertions(+)
+ create mode 100644 OthelloAI/src/GameState.py
+ create mode 100644 OthelloAI/src/__init__.py
+ create mode 100644 OthelloAI/src/ui/MainFrame.py
+ create mode 100644 OthelloAI/tests/__init__.py
+ create mode 100644 OthelloAI/tests/test_GameState.py
+
+diff --git a/.gitignore b/.gitignore
+index b6e4761..c14a92b 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -127,3 +127,5 @@ dmypy.json
+ 
+ # Pyre type checker
+ .pyre/
++/.vscode
++/.noseids
+diff --git a/OthelloAI/src/GameState.py b/OthelloAI/src/GameState.py
+new file mode 100644
+index 0000000..deb71f7
+--- /dev/null
++++ b/OthelloAI/src/GameState.py
+@@ -0,0 +1,58 @@
++class GameState:
++    def __init__(self):
++        self.data = [[0, 0, 0, 0, 0, 0, 0, 0],
++                     [0, 0, 0, 0, 0, 0, 0, 0],
++                     [0, 0, 0, 0, 0, 0, 0, 0],
++                     [0, 0, 0, 1, -1, 0, 0, 0],
++                     [0, 0, 0, -1, 1, 0, 0, 0],
++                     [0, 0, 0, 0, 0, 0, 0, 0],
++                     [0, 0, 0, 0, 0, 0, 0, 0],
++                     [0, 0, 0, 0, 0, 0, 0, 0]
++                    ]
++
++    def getGameState(self):
++        return self.data
++
++    def getColor(self, position):
++        row, col = position
++        if row < 1 or row > 8:
++            raise IndexError("getColor Error: Invalid row number {}".format(row))
++        if col < 1 or col > 8:
++            raise IndexError("getColor rror: Invalid column number {}".format(col))
++        if self.data[row-1][col-1] == 1:
++            return 'black'
++        elif self.data[row-1][col-1] == -1:
++            return 'white'
++        else:
++            return None
++
++    def setColor(self, color, position):        
++        row, col = position
++        if row < 1 or row > 8:
++            raise IndexError("setColor Error: Invalid row number {}".format(row))
++        if col < 1 or col > 8:
++            raise IndexError("setColor Error: Invalid column number {}".format(col))
++        if color == 'black':
++            self.data[row-1][col-1] = 1
++        elif color == 'white':
++            self.data[row-1][col-1] = -1
++        else:
++            raise ValueError("setColor Error: Invalid color: {}".format(color))
++
++    def doAction(self, action, position):
++        if self.getColor(position) != None:
++            raise "doAction Error: Position " + position + " already occupied."
++        if action == 'black':
++            self.setColor('black', position)
++        elif action == 'white':
++            self.setColor('white', position)
++        else:
++            raise "Error: Invalid action"
++        self.updateGameState(position)
++
++    def updateGameState(self, position):
++        pass
++
++
++        
++    
+\ No newline at end of file
+diff --git a/OthelloAI/src/__init__.py b/OthelloAI/src/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/OthelloAI/src/ui/MainFrame.py b/OthelloAI/src/ui/MainFrame.py
+new file mode 100644
+index 0000000..d92309c
+--- /dev/null
++++ b/OthelloAI/src/ui/MainFrame.py
+@@ -0,0 +1,10 @@
++from tkinter import *
++from tkinter import ttk
++
++root = Tk()
++root.title("Othello")
++
++mainframe = ttk.Frame(root, padding="12 12 12 12")
++root.configure(background='green')
++
++root.mainloop()
+\ No newline at end of file
+diff --git a/OthelloAI/tests/__init__.py b/OthelloAI/tests/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/OthelloAI/tests/test_GameState.py b/OthelloAI/tests/test_GameState.py
+new file mode 100644
+index 0000000..c0e8019
+--- /dev/null
++++ b/OthelloAI/tests/test_GameState.py
+@@ -0,0 +1,48 @@
++import unittest
++# import sys
++from src.GameState import GameState
++
++class GameStateTests(unittest.TestCase):
++    def test_constructor(self):
++        gs = GameState()        
++        self.assertEqual(gs.getGameState(), 
++        [[0, 0, 0, 0, 0, 0, 0, 0],
++        [0, 0, 0, 0, 0, 0, 0, 0],
++        [0, 0, 0, 0, 0, 0, 0, 0],
++        [0, 0, 0, 1, -1, 0, 0, 0],
++        [0, 0, 0, -1, 1, 0, 0, 0],
++        [0, 0, 0, 0, 0, 0, 0, 0],
++        [0, 0, 0, 0, 0, 0, 0, 0],
++        [0, 0, 0, 0, 0, 0, 0, 0]])
++
++    def test_setColor_outOfRangeError(self):
++        gs = GameState()
++        self.assertRaises(IndexError, gs.setColor, 'black', (0,0))
++
++    def test_setColor_colorError(self):
++        gs = GameState()
++        self.assertRaises(ValueError, gs.setColor, None, (1,1))
++
++    def test_doAction(self):
++        gs = GameState()
++        gs.doAction('black', (3,5))
++        self.assertEqual(gs.getGameState(), 
++        [[0, 0, 0, 0, 0, 0, 0, 0],
++        [0, 0, 0, 0, 0, 0, 0, 0],
++        [0, 0, 0, 0, 1, 0, 0, 0],
++        [0, 0, 0, 1, 1, 0, 0, 0],
++        [0, 0, 0, -1, 1, 0, 0, 0],
++        [0, 0, 0, 0, 0, 0, 0, 0],
++        [0, 0, 0, 0, 0, 0, 0, 0],
++        [0, 0, 0, 0, 0, 0, 0, 0]])
++
++    def test_doAction_noflip(self):        
++        gs = GameState()
++        self.assertRaises(Exception, gs.doAction, 'black', (1,1))
++
++    def test_getSuccessors(self):
++        pass
++
++
++if __name__ == '__main__':
++    unittest.main()
+\ No newline at end of file
+-- 
+2.27.0.windows.1
+

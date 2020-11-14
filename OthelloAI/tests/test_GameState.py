@@ -41,7 +41,25 @@ class GameStateTests(unittest.TestCase):
         self.assertRaises(Exception, gs.doAction, 'black', (1,1))
 
     def test_getSuccessors(self):
-        pass
+        gs = GameState()
+
+    def test_loadGameState(self):
+        st = [[0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0, 0],
+            [0, 1, 0, -1, 1, 0, 0, 0],
+            [1, -1, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0]]
+        gs = GameState.loadGameState(st)
+        self.assertEqual(gs.getGameState(), st)
+
+    def test_GameState_init_sizeError(self):
+        st = [[0, 0, 0, 0, 0, 0, 0  ]]
+        self.assertRaises(Exception, GameState, st)
+        
+
 
 
 if __name__ == '__main__':

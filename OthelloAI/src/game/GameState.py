@@ -1,14 +1,30 @@
 class GameState:
-    def __init__(self):
-        self.data = [[0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 1, -1, 0, 0, 0],
-                     [0, 0, 0, -1, 1, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0]
-                    ]
+    def __init__(self, state = None):
+        if state != None:
+            if len(state) != 8:
+                raise Exception("init Error: Board size error")
+            for l in state:
+                if len(l) != 8:
+                    raise Exception("init Error: Board size error")
+            self.data = state
+        else:
+            self.data = [[0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 1, -1, 0, 0, 0],
+                        [0, 0, 0, -1, 1, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0]]
+            
+    def setGameState(self, state):
+        if len(state) != 8:
+            raise Exception("init Error: Board size error")
+        for l in state:
+            if len(l) != 8:
+                raise Exception("init Error: Board size error")
+        self.data = state
+
 
     def getGameState(self):
         return self.data
@@ -51,6 +67,9 @@ class GameState:
         self.updateGameState(position)
 
     def updateGameState(self, position):
+        pass
+
+    def getSussessors(self):
         pass
 
 
