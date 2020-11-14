@@ -1,6 +1,6 @@
 import unittest
 # import sys
-from src.GameState import GameState
+from src.game.GameState import GameState
 
 class GameStateTests(unittest.TestCase):
     def test_constructor(self):
