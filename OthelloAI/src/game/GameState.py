@@ -1,3 +1,5 @@
+from src.game.gameBoard import INIT_BOARD
+
 class GameState:
     def __init__(self, state = None):
         if state != None:
@@ -8,14 +10,7 @@ class GameState:
                     raise Exception("init Error: Board size error")
             self.data = state
         else:
-            self.data = [[0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 1, -1, 0, 0, 0],
-                        [0, 0, 0, -1, 1, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0]]
+            self.data = INIT_BOARD
             
     def setGameState(self, state):
         if len(state) != 8:
