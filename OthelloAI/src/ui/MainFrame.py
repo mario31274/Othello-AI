@@ -1,5 +1,5 @@
 import tkinter as tk
-from src.ui.util import draw_gridlines
+from src.ui.util import draw_gridlines, draw_board
 from src.ui.config import *
 from src.game.gameBoard import GameBoard
 
@@ -12,7 +12,8 @@ root.configure(background='green')
 draw_gridlines(canvas)
 
 board = GameBoard()
-print(board.getGameBoard())
+draw_board(canvas, board)
+# print(board.getGameBoard())
 
 # Util._draw_white(canvas, 4, 4)
 # Util._draw_black(canvas, 4, 5)
