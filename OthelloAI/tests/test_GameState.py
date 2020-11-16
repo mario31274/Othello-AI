@@ -1,5 +1,4 @@
 import unittest
-# import sys
 from src.game.gameState import GameState
 
 class GameStateTests(unittest.TestCase):
