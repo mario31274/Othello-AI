@@ -1,5 +1,5 @@
 import unittest
-from src.game.gameState import GameState
+from src.ai.gameState import GameState
 
 class GameStateTests(unittest.TestCase):
     def test_constructor(self):
