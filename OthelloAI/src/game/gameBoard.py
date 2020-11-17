@@ -20,6 +20,7 @@ class GameBoard(metaclass=Singleton):
             self.__board = board
         else:
             self.__board = INIT_BOARD
+        self.__currentPlayer = 1        # 1 = black, 0 = white
     
     def getGameBoard(self):
         return self.__board
@@ -50,17 +51,28 @@ class GameBoard(metaclass=Singleton):
         else:
             raise ValueError("setColor Error: Invalid color: {}".format(color))
 
-    def doAction(self, action, position):
+    def placePieceAt(self, position):
         if self.getColor(position) != None:
-            raise "doAction Error: Position " + position + " already occupied."
-        if action == 'black':
+            raise Exception("placePieceAt Error: Position {} already occupied.".format(position))
+        if self.__currentPlayer == 1:
             self.setColor('black', position)
-        elif action == 'white':
+            self.updateGameBoard(position)
+            self.__currentPlayer ^= 1
+        elif self.__currentPlayer == 0:
             self.setColor('white', position)
+            self.updateGameBoard(position)
+            self.__currentPlayer ^= 1
         else:
-            raise "Error: Invalid action"
-        self.updateGameBoard(position)
+            raise Exception("Error: Invalid action")
 
     def updateGameBoard(self, position):
         pass
-            
+
+    def isValidMove(self, position):
+        pass
+
+    def getCurrentPlayer(self):
+        if self.__currentPlayer == 1:
+            return "black"
+        else:
+            return "white"

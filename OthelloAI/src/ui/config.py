@@ -1,5 +1,9 @@
-window_height = 600
-window_width = 600
-board_height = 600
-board_width = 600
+window_height = 601
+window_width = 601
+board_height = 601
+board_width = 601
 piece_border = 2
+row_num_width = 40
+row_num_height = board_height
+col_num_width = board_width
+col_num_height = 40
