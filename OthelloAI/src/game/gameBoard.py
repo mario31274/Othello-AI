@@ -21,6 +21,9 @@ class GameBoard(metaclass=Singleton):
         else:
             self.__board = INIT_BOARD
         self.__currentPlayer = 1        # 1 = black, 0 = white
+        self.__isGameOver = False
+        self.__winner = 0               # 1 = black, -1 = white, 0 = not end or tie
+        self.__roundSkippedFlag = False # Flag if last round is skipped to prevent inf skips
     
     def getGameBoard(self):
         return self.__board
@@ -57,11 +60,17 @@ class GameBoard(metaclass=Singleton):
             for piece in row:
                 if piece == 1:
                     black_number += 1
-                elif piece == -1:                    
+                elif piece == -1:
                     white_number += 1
         return black_number, white_number
 
+    def getWinner(self):
+        return self.__winner
+
     def placePieceAt(self, position):
+        if len(self.getValidMoves()) == 0 and not self.__isGameOver:
+            self.skipTurn()
+        self.__roundSkippedFlag = False
         if self.getColor(position) != None:
             raise Exception("placePieceAt Error: Position {} already occupied.".format(position))
         if position in self.getValidMoves():
@@ -76,6 +85,10 @@ class GameBoard(metaclass=Singleton):
         else:
             raise Exception("Error: Invalid move")
 
+    def skipTurn(self):
+        self.__currentPlayer ^= 1
+        self.__roundSkippedFlag = True
+
     def updateGameBoard(self, position):
         row, col = position
         self.__flipLine(row, col, -1,  0)
@@ -86,6 +99,7 @@ class GameBoard(metaclass=Singleton):
         self.__flipLine(row, col,  1, -1)
         self.__flipLine(row, col,  0, -1)
         self.__flipLine(row, col, -1, -1)
+        self.checkGameStatus()
 
     def isValidMove(self, position, drow, dcol):
         if self.__currentPlayer == 1:
@@ -155,8 +169,24 @@ class GameBoard(metaclass=Singleton):
         else:
             if self.__flipLine(row+drow, col+dcol, drow, dcol):
                 self.setColor(self.getCurrentPlayer(), (row+drow, col+dcol))
-                # print('flipped')
                 return True
             else:
                 return False
             
+    def checkGameStatus(self):
+        blank = 0
+        for row in self.__board:
+            for piece in row:
+                if piece == 0:
+                    blank += 1        
+        black, white = self.getPieceNumbers()
+        if blank == 0 or black == 0 or white == 0 or (self.__roundSkippedFlag and len(self.getValidMoves()) == 0):
+            self.__isGameOver = True
+            if black > white:
+                self.__winner = 1
+            elif white > black:
+                self.__winner = -1
+
+
+    def isGameOver(self):
+        return self.__isGameOver

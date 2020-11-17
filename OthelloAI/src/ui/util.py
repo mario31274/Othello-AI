@@ -62,6 +62,9 @@ def draw_scoreboard():
     mainFrame.scoreboard_black_canvas.create_text(x,y,text=black_num, font=(scoreboard_font, scoreboard_font_size), fill=scoreboard_font_color, tags="score")
     mainFrame.scoreboard_white_canvas.create_text(x,y,text=white_num, font=(scoreboard_font, scoreboard_font_size), fill=scoreboard_font_color, tags="score")
 
+def draw_message(label, msg):
+    label.config(text=msg)
+
 def x_y_to_row_column(x, y):
     width = (board_width-2) / 8
     height = (board_height-2) / 8
@@ -73,5 +76,16 @@ def update_ui():
     draw_board(mainFrame.board_canvas)
     mainFrame.board_canvas.delete("valid")
     draw_valid_moves(mainFrame.board_canvas)
-    mainFrame.message_bar_label.config(text="{}'s turn".format(mainFrame.board.getCurrentPlayer()))
+    if mainFrame.board.isGameOver():
+        if mainFrame.board.getWinner() == 1:
+            draw_message(mainFrame.message_bar_label, "Black wins!")
+        elif mainFrame.board.getWinner() == -1:
+            draw_message(mainFrame.message_bar_label, "White wins!")
+        else:            
+            draw_message(mainFrame.message_bar_label, "It's a tie!")
+    else:
+        if len(mainFrame.board.getValidMoves()) == 0:
+            draw_message(mainFrame.message_bar_label, "{} has no legal moves, \n will skip one turn.".format(mainFrame.board.getCurrentPlayer()))
+        else:
+            draw_message(mainFrame.message_bar_label, "{}'s turn".format(mainFrame.board.getCurrentPlayer()))
     draw_scoreboard()
